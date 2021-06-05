@@ -23,6 +23,5 @@ For more information visit [https://github.com/jaroslawhartman/withings-sync#usa
 
 ## Configuration
 
-There is a wrapper around `withings-sync` to run it every `900` seconds.
-
-To change this value start the docker container with `-e SLEEP=<YOUR_SLEEP_TIME>`.
+There is cron config to run `withings-sync` every day at 10.
+To change this time you need to edit the `withings-sync` file.

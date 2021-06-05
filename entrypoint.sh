@@ -2,18 +2,19 @@
 
 set -eu
 
-sleep="${SLEEP:-900}"
-verbose="${VERBOSE:-false}"
+# trap ctrl-c and call ctrl_c()
+trap ctrl_c INT
 
-if [[ ${verbose} == "true" ]]; then
-    args="-v"
-    echo "sleep value: ${sleep}"
-    echo "withings-sync arguments: ${args}"
-fi
+function ctrl_c() {
+        echo "Trapped CTRL-C, exiting"
+        exit 0
+}
 
+echo "Starting cron..."
+/etc/init.d/cron start
 
-while true; do
-    withings-sync "${args}"
-    echo "Command completed. Sleeping ${sleep} seconds..."
-    sleep "${sleep}"
+while true;
+do
+    echo "Container up and running..."
+    sleep 86400
 done

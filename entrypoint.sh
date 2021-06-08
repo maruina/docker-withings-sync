@@ -13,6 +13,9 @@ function ctrl_c() {
 echo "Starting cron..."
 /etc/init.d/cron start
 
+echo "Setting environment variables for cron..."
+printenv | sed 's/^\(.*\)$/export \1/g' > /root/cron_env.sh
+
 while true;
 do
     echo "Container up and running..."

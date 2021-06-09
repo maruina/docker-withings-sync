@@ -15,9 +15,6 @@ RUN apt-get update && \
     pip install --no-cache-dir git+https://github.com/jaroslawhartman/withings-sync.git@"${WITHINGS_SYNC_COMMIT}"
 
 COPY entrypoint.sh /entrypoint.sh
-COPY withings-sync /etc/cron.d/withings-sync
-
-RUN chmod 0644 /etc/cron.d/withings-sync
 
 ENTRYPOINT ["/tini", "--"]
 CMD ["/entrypoint.sh"]

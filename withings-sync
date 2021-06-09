@@ -1,1 +1,0 @@
-0 10 * * * root . /root/cron_env.sh; /usr/local/bin/withings-sync -v >> /var/log/cron-withings-sync.log 2>&1

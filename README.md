@@ -24,4 +24,4 @@ For more information visit [https://github.com/jaroslawhartman/withings-sync#usa
 ## Configuration
 
 There is cron config to run `withings-sync` every day at 10.
-To change this time you need to edit the `withings-sync` file.
+To change this time you need to edit https://github.com/maruina/docker-withings-sync/blob/main/entrypoint.sh#L28.

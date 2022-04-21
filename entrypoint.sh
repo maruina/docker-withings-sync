@@ -31,6 +31,6 @@ chmod 0644 "${cron_file}"
 
 while true;
 do
-    echo "Container up and running..."
+    echo "$(date): Container up and running, sleeping for 86400 seconds..."
     sleep 86400
 done

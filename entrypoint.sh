@@ -25,7 +25,7 @@ echo "export GARMIN_PASSWORD=${garmin_password}" >> "${env_file}"
 
 echo "Setting up cronjob..."
 cat << EOF > "${cron_file}"
-0 10 * * * root . "${env_file}"; /usr/local/bin/withings-sync -v >> /var/log/withings-sync.log 2>&1
+0 10 * * * root . "${env_file}"; /usr/local/bin/withings-sync -v --gu $GARMIN_USERNAME --gp $GARMIN_PASSWORD >> /var/log/withings-sync.log 2>&1
 EOF
 chmod 0644 "${cron_file}"
 

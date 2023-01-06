@@ -2,12 +2,9 @@ FROM python:3.9.5-slim-buster
 
 ARG WITHINGS_SYNC_COMMIT=240f6123c9eb8226fff650f22a2979867fcba00e
 ARG TINI_VERSION=v0.19.0
-ARG GIT_VERSION=1:2.20.1-2+deb10u3
-ARG CRON_VERSION=3.0pl1-134+deb10u1
-ARG CURL_VERSION=7.64.0-4+deb10u2
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git="${GIT_VERSION}" cron="${CRON_VERSION}" curl="${CURL_VERSION}" && \
+    apt-get install -y --no-install-recommends git cron curl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     curl -sL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" -o /tini && \

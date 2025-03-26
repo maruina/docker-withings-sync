@@ -1,4 +1,4 @@
-FROM python:3.9.5-slim-buster
+FROM python:3.11.4-slim-buster
 
 ARG WITHINGS_SYNC_COMMIT=99f9186e297935e0fe4d9e7a8c724c1f309b6b04
 ARG TINI_VERSION=v0.19.0

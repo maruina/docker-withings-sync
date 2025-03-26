@@ -1,6 +1,6 @@
-FROM python:3.9.5-slim-buster
+FROM python:3.13-slim-bookworm
 
-ARG WITHINGS_SYNC_COMMIT=99f9186e297935e0fe4d9e7a8c724c1f309b6b04
+ARG WITHINGS_SYNC_COMMIT=67c0ed293a38abf4facf6ee150cdc92835743ae6
 ARG TINI_VERSION=v0.19.0
 
 RUN apt-get update && \

@@ -1,36 +1,12 @@
 #!/bin/bash
 
 set -eu
-
-garmin_username="${GARMIN_USERNAME:-UNSET}"
-garmin_password="${GARMIN_PASSWORD:-UNSET}"
-env_file="/root/env.sh"
-cron_file="/etc/cron.d/withings-sync"
-
-# trap ctrl-c and call ctrl_c()
-trap ctrl_c INT
-
-function ctrl_c() {
-        echo "Trapped CTRL-C, exiting"
-        exit 0
-}
-
-echo "Starting cron..."
-/etc/init.d/cron start
-
-echo "Setting environment variables for cron..."
-touch "${env_file}"
-echo "export GARMIN_USERNAME=${garmin_username}" >> "${env_file}"
-echo "export GARMIN_PASSWORD=${garmin_password}" >> "${env_file}"
-
-echo "Setting up cronjob..."
-cat << EOF > "${cron_file}"
-0 10 * * * root . "${env_file}"; /usr/local/bin/withings-sync -v --gu $GARMIN_USERNAME --gp $GARMIN_PASSWORD >> /var/log/withings-sync.log 2>&1
-EOF
-chmod 0644 "${cron_file}"
+echo "$(date): Container started"
 
 while true;
 do
-    echo "$(date): Container up and running, sleeping for 86400 seconds..."
-    sleep 86400
+    echo "$(date): Starting withings-sync" >> /var/log/withings-sync.log
+    /usr/local/bin/withings-sync -v >> /var/log/withings-sync.log 2>&1
+    echo "$(date): Finished withings-sync" >> /var/log/withings-sync.log
+    sleep 21600 # 6h
 done

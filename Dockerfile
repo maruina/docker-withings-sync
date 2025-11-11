@@ -1,4 +1,4 @@
-FROM python:3.14-slim-bookworm
+FROM python:3.13-slim-bookworm
 
 ARG WITHINGS_SYNC_COMMIT=14b4ac90454948d80192bbfb6493842c7490d542
 ARG TINI_VERSION=v0.19.0

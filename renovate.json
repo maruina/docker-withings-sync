@@ -2,5 +2,25 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "config:recommended"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "ARG TINI_VERSION=(?<currentValue>v\\S+)"
+      ],
+      "depNameTemplate": "krallin/tini",
+      "datasourceTemplate": "github-releases"
+    },
+    {
+      "customType": "regex",
+      "fileMatch": ["^Dockerfile$"],
+      "matchStrings": [
+        "# withings-sync (?<currentValue>v\\S+)\\nARG WITHINGS_SYNC_COMMIT=(?<currentDigest>[a-f0-9]+)"
+      ],
+      "depNameTemplate": "jaroslawhartman/withings-sync",
+      "datasourceTemplate": "github-tags"
+    }
   ]
 }

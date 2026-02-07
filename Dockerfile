@@ -1,4 +1,4 @@
-FROM python:3.13-slim-bookworm AS builder
+FROM python:3.14-slim-bookworm AS builder
 
 # withings-sync v0.11.0
 ARG WITHINGS_SYNC_COMMIT=14b4ac90454948d80192bbfb6493842c7490d542
@@ -11,7 +11,7 @@ RUN apt-get update && \
 RUN pip install --no-cache-dir setuptools && \
     pip install --no-cache-dir git+https://github.com/jaroslawhartman/withings-sync.git@"${WITHINGS_SYNC_COMMIT}"
 
-FROM python:3.13-slim-bookworm
+FROM python:3.14-slim-bookworm
 
 ARG TINI_VERSION=v0.19.0
 
@@ -25,7 +25,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/lib/python3.14/site-packages /usr/local/lib/python3.14/site-packages
 COPY --from=builder /usr/local/bin/withings-sync /usr/local/bin/withings-sync
 
 ENV SYNC_INTERVAL=21600 \

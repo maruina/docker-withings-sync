@@ -1,7 +1,7 @@
 FROM python:3.14-slim-bookworm AS builder
 
-# withings-sync v0.11.0
-ARG WITHINGS_SYNC_COMMIT=14b4ac90454948d80192bbfb6493842c7490d542
+# withings-sync v5.3.0
+ARG WITHINGS_SYNC_COMMIT=d4395bf88dd8619012c3e28319c092e924d66570
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends git libxml2-dev libxslt-dev gcc python3-dev && \

@@ -11,6 +11,9 @@ fullnameOverride: ""
 # Sync interval in seconds (default: 6 hours)
 syncInterval: 21600
 
+# Directory for persistent data (OAuth tokens).
+dataDir: /data
+
 # Garmin credentials. Either set garmin.username and garmin.password to create
 # a Secret, or set garmin.existingSecret to reference a pre-existing one.
 # The existing secret must have 'GARMIN_USERNAME' and 'GARMIN_PASSWORD' keys.

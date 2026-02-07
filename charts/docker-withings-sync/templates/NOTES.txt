@@ -1,13 +1,5 @@
 docker-withings-sync has been deployed.
 
-{{- if not .Values.garmin.existingSecret }}
-{{- if or (not .Values.garmin.username) (not .Values.garmin.password) }}
-
-WARNING: Garmin credentials are not set. The application will fail to sync.
-Set garmin.username and garmin.password, or provide garmin.existingSecret.
-{{- end }}
-{{- end }}
-
 The sync runs every {{ .Values.syncInterval }} seconds ({{ div .Values.syncInterval 3600 }}h).
 
 {{- if not .Values.persistence.enabled }}

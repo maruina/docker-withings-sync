@@ -8,7 +8,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# Sync interval in seconds (default: 6 hours)
+# Sync interval in seconds (6 hours).
 syncInterval: 21600
 
 # Directory for persistent data (OAuth tokens).
@@ -43,12 +43,13 @@ persistence:
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
-  # fsGroup: 1000
+podSecurityContext:
+  fsGroup: 65532
 
-securityContext: {}
-  # runAsNonRoot: true
-  # runAsUser: 1000
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  allowPrivilegeEscalation: false
 
 resources: {}
   # limits:

@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "docker-withings-sync.labels" . | nindent 4 }}
 spec:
+  # Must be 1: single-writer to Garmin API and RWO PVC.
   replicas: 1
   strategy:
     type: Recreate

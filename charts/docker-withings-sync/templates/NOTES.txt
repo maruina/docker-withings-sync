@@ -1,14 +1,12 @@
 docker-withings-sync has been deployed.
 
-{{- if not .Values.garmin.existingSecret }}
-{{- if or (not .Values.garmin.username) (not .Values.garmin.password) }}
-
-WARNING: Garmin credentials are not set. The application will fail to sync.
-Set garmin.username and garmin.password, or provide garmin.existingSecret.
-{{- end }}
-{{- end }}
-
 The sync runs every {{ .Values.syncInterval }} seconds ({{ div .Values.syncInterval 3600 }}h).
+
+{{- if not .Values.persistence.enabled }}
+
+WARNING: Persistence is disabled. Withings OAuth tokens will not survive pod
+restarts. You will need to re-authorize after every restart.
+{{- end }}
 
 {{- if .Values.persistence.enabled }}
 
@@ -27,8 +25,8 @@ authorization code. Run an interactive pod:
     --overrides='{"spec":{"containers":[{"name":"withings-setup","image":"{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}","command":["/bin/bash"],"stdin":true,"tty":true,"env":[{"name":"GARMIN_USERNAME","valueFrom":{"secretKeyRef":{"name":"{{ include "docker-withings-sync.secretName" . }}","key":"GARMIN_USERNAME"}}},{"name":"GARMIN_PASSWORD","valueFrom":{"secretKeyRef":{"name":"{{ include "docker-withings-sync.secretName" . }}","key":"GARMIN_PASSWORD"}}},{"name":"HOME","value":"/data"}],"volumeMounts":[{"name":"data","mountPath":"/data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ include "docker-withings-sync.pvcName" . }}"}}]}}' \
     -- /bin/bash
 
-  # Inside the pod, run:
-  withings-sync -f 2019-01-25 -v
+  # Inside the pod, run (use any past date for the initial sync):
+  withings-sync -f <YYYY-MM-DD> -v
 
   # Follow the prompts to authorize with Withings.
 {{- end }}

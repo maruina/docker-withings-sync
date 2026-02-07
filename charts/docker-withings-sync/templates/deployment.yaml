@@ -5,6 +5,7 @@ metadata:
   labels:
     {{- include "docker-withings-sync.labels" . | nindent 4 }}
 spec:
+  # Must be 1: single-writer to Garmin API and RWO PVC.
   replicas: 1
   strategy:
     type: Recreate
@@ -53,25 +54,25 @@ spec:
             - name: SYNC_INTERVAL
               value: {{ .Values.syncInterval | quote }}
             - name: DATA_DIR
-              value: /data
+              value: {{ .Values.dataDir | quote }}
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
+          {{- if .Values.persistence.enabled }}
           volumeMounts:
-            {{- if .Values.persistence.enabled }}
             - name: data
-              mountPath: /data
-            {{- end }}
+              mountPath: {{ .Values.dataDir | quote }}
+          {{- end }}
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      {{- if .Values.persistence.enabled }}
       volumes:
-        {{- if .Values.persistence.enabled }}
         - name: data
           persistentVolumeClaim:
             claimName: {{ include "docker-withings-sync.pvcName" . }}
-        {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

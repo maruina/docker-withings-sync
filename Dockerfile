@@ -1,23 +1,44 @@
-FROM python:3.13-slim-bookworm
+FROM python:3.13-slim-bookworm AS builder
 
+# withings-sync v0.11.0
 ARG WITHINGS_SYNC_COMMIT=14b4ac90454948d80192bbfb6493842c7490d542
-ARG TINI_VERSION=v0.19.0
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends git curl libxml2-dev libxslt-dev gcc python3-dev && \
+    apt-get install -y --no-install-recommends git libxml2-dev libxslt-dev gcc python3-dev && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    curl -sL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" -o /tini && \
-    chmod +x /tini && \
-    pip install --no-cache-dir setuptools && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip install --no-cache-dir setuptools && \
     pip install --no-cache-dir git+https://github.com/jaroslawhartman/withings-sync.git@"${WITHINGS_SYNC_COMMIT}"
 
-ENV SYNC_INTERVAL=21600
-ENV DATA_DIR=/data
+FROM python:3.13-slim-bookworm
 
-RUN mkdir -p /data
+ARG TINI_VERSION=v0.19.0
 
-COPY entrypoint.sh /entrypoint.sh
+# Install tini for proper PID 1 signal handling, and libxml2/libxslt1.1 as
+# runtime dependencies for the lxml Python package.
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl libxml2 libxslt1.1 && \
+    curl -fsSL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" -o /tini && \
+    chmod +x /tini && \
+    apt-get purge -y --auto-remove curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
-ENTRYPOINT ["/tini", "--"]
+COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/python3.13/site-packages
+COPY --from=builder /usr/local/bin/withings-sync /usr/local/bin/withings-sync
+
+ENV SYNC_INTERVAL=21600 \
+    DATA_DIR=/data
+
+RUN groupadd -r -g 65532 withings && useradd -r -u 65532 -g withings -d /data -s /sbin/nologin withings && \
+    mkdir -p /data && chown withings:withings /data
+
+COPY --chmod=0755 entrypoint.sh /entrypoint.sh
+
+USER withings
+
+# The -g flag forwards signals to the child's process group, ensuring sleep(1)
+# is also terminated on SIGTERM for graceful container shutdown.
+ENTRYPOINT ["/tini", "-g", "--"]
 CMD ["/entrypoint.sh"]

@@ -3,6 +3,14 @@
   "extends": [
     "config:recommended"
   ],
+  "packageRules": [
+    {
+      "description": "Disable Python version updates in chart-test workflow. Python there is only a build tool for ct/yamale, not the application runtime.",
+      "matchFileNames": [".github/workflows/chart-test.yaml"],
+      "matchDepNames": ["python"],
+      "enabled": false
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",

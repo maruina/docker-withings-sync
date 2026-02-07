@@ -17,9 +17,11 @@ jobs:
 
       - uses: azure/setup-helm@v4
 
+      # Python is only used as a build tool for chart-testing (ct/yamale),
+      # not for the application. Pin to 3.13 because yamale does not support 3.14.
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - uses: helm/chart-testing-action@v2
 
@@ -46,9 +48,11 @@ jobs:
 
       - uses: azure/setup-helm@v4
 
+      # Python is only used as a build tool for chart-testing (ct/yamale),
+      # not for the application. Pin to 3.13 because yamale does not support 3.14.
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.14"
+          python-version: "3.13"
 
       - uses: helm/chart-testing-action@v2
 

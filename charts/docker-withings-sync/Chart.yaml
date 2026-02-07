@@ -3,7 +3,7 @@ name: docker-withings-sync
 description: A Helm chart for deploying withings-sync to Kubernetes
 type: application
 version: 0.1.0
-appVersion: "0.11.0"
+appVersion: "0.12.0"
 home: https://github.com/maruina/docker-withings-sync
 sources:
   - https://github.com/maruina/docker-withings-sync

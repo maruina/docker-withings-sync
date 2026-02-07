@@ -1,0 +1,34 @@
+docker-withings-sync has been deployed.
+
+{{- if not .Values.garmin.existingSecret }}
+{{- if or (not .Values.garmin.username) (not .Values.garmin.password) }}
+
+WARNING: Garmin credentials are not set. The application will fail to sync.
+Set garmin.username and garmin.password, or provide garmin.existingSecret.
+{{- end }}
+{{- end }}
+
+The sync runs every {{ .Values.syncInterval }} seconds ({{ div .Values.syncInterval 3600 }}h).
+
+{{- if .Values.persistence.enabled }}
+
+Persistent storage is enabled.
+{{- if .Values.persistence.existingClaim }}
+Using existing PVC: {{ .Values.persistence.existingClaim }}
+{{- else }}
+PVC: {{ include "docker-withings-sync.fullname" . }} ({{ .Values.persistence.size }})
+{{- end }}
+
+IMPORTANT: Before the first automated run, you must obtain a Withings
+authorization code. Run an interactive pod:
+
+  kubectl run withings-setup --rm -it \
+    --image={{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} \
+    --overrides='{"spec":{"containers":[{"name":"withings-setup","image":"{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}","command":["/bin/bash"],"stdin":true,"tty":true,"env":[{"name":"GARMIN_USERNAME","valueFrom":{"secretKeyRef":{"name":"{{ include "docker-withings-sync.secretName" . }}","key":"GARMIN_USERNAME"}}},{"name":"GARMIN_PASSWORD","valueFrom":{"secretKeyRef":{"name":"{{ include "docker-withings-sync.secretName" . }}","key":"GARMIN_PASSWORD"}}},{"name":"HOME","value":"/data"}],"volumeMounts":[{"name":"data","mountPath":"/data"}]}],"volumes":[{"name":"data","persistentVolumeClaim":{"claimName":"{{ include "docker-withings-sync.pvcName" . }}"}}]}}' \
+    -- /bin/bash
+
+  # Inside the pod, run:
+  withings-sync -f 2019-01-25 -v
+
+  # Follow the prompts to authorize with Withings.
+{{- end }}

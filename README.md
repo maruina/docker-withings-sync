@@ -23,5 +23,48 @@ For more information visit [https://github.com/jaroslawhartman/withings-sync#usa
 
 ## Configuration
 
-There is cron config to run `withings-sync` every day at 10.
-To change this time you need to edit https://github.com/maruina/docker-withings-sync/blob/main/entrypoint.sh#L28.
+| Environment Variable | Default | Description |
+|---|---|---|
+| `GARMIN_USERNAME` | (required) | Garmin account username |
+| `GARMIN_PASSWORD` | (required) | Garmin account password |
+| `SYNC_INTERVAL` | `21600` | Sync interval in seconds (default: 6 hours) |
+| `DATA_DIR` | `/data` | Directory for persistent data (OAuth tokens) |
+
+## Kubernetes (Helm)
+
+A Helm chart is available in [`charts/docker-withings-sync`](charts/docker-withings-sync).
+
+### Install
+
+```console
+helm install withings-sync charts/docker-withings-sync \
+  --set garmin.username=<YOUR_GARMIN_USER> \
+  --set garmin.password=<YOUR_GARMIN_PASSWORD>
+```
+
+Or use an existing secret:
+
+```console
+kubectl create secret generic withings-garmin \
+  --from-literal=GARMIN_USERNAME=<YOUR_GARMIN_USER> \
+  --from-literal=GARMIN_PASSWORD=<YOUR_GARMIN_PASSWORD>
+
+helm install withings-sync charts/docker-withings-sync \
+  --set garmin.existingSecret=withings-garmin
+```
+
+### First Setup on Kubernetes
+
+Before the first automated run, obtain a Withings authorization code interactively. The Helm install notes will print the exact `kubectl run` command to use.
+
+### Persistence
+
+The chart creates a PersistentVolumeClaim by default to store the Withings OAuth tokens. To use an existing PVC:
+
+```console
+helm install withings-sync charts/docker-withings-sync \
+  --set persistence.existingClaim=my-existing-pvc \
+  --set garmin.existingSecret=withings-garmin
+```
+
+See [`charts/docker-withings-sync/values.yaml`](charts/docker-withings-sync/values.yaml) for all available options.

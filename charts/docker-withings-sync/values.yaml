@@ -1,0 +1,62 @@
+image:
+  repository: ghcr.io/maruina/docker-withings-sync
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+# Sync interval in seconds (default: 6 hours)
+syncInterval: 21600
+
+# Garmin credentials. Either set garmin.username and garmin.password to create
+# a Secret, or set garmin.existingSecret to reference a pre-existing one.
+# The existing secret must have 'GARMIN_USERNAME' and 'GARMIN_PASSWORD' keys.
+garmin:
+  username: ""
+  password: ""
+  existingSecret: ""
+
+# Extra environment variables to pass to the container.
+# Example:
+#   extraEnv:
+#     - name: FOO
+#       value: bar
+extraEnv: []
+
+# Persistent volume for storing Withings OAuth tokens.
+persistence:
+  enabled: true
+  # Use an existing PVC instead of creating one.
+  existingClaim: ""
+  storageClass: ""
+  accessModes:
+    - ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+
+podAnnotations: {}
+podLabels: {}
+
+podSecurityContext: {}
+  # fsGroup: 1000
+
+securityContext: {}
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+resources: {}
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 50m
+  #   memory: 64Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

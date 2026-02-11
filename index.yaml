@@ -2,6 +2,22 @@ apiVersion: v1
 entries:
   docker-withings-sync:
   - apiVersion: v2
+    appVersion: 0.13.0
+    created: "2026-02-11T22:54:43.256419972Z"
+    description: A Helm chart for deploying withings-sync to Kubernetes
+    digest: 3415f7e458ffd895a10e1434a38c9b2596c6a5e098bb9799c8a70d6cb4f2747b
+    home: https://github.com/maruina/docker-withings-sync
+    maintainers:
+    - name: maruina
+    name: docker-withings-sync
+    sources:
+    - https://github.com/maruina/docker-withings-sync
+    - https://github.com/jaroslawhartman/withings-sync
+    type: application
+    urls:
+    - https://github.com/maruina/docker-withings-sync/releases/download/docker-withings-sync-0.2.0/docker-withings-sync-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 0.12.0
     created: "2026-02-07T22:25:43.499213508Z"
     description: A Helm chart for deploying withings-sync to Kubernetes
@@ -17,4 +33,4 @@ entries:
     urls:
     - https://github.com/maruina/docker-withings-sync/releases/download/docker-withings-sync-0.1.1/docker-withings-sync-0.1.1.tgz
     version: 0.1.1
-generated: "2026-02-07T22:25:43.499218235Z"
+generated: "2026-02-11T22:54:43.256431614Z"

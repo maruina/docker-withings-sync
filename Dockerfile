@@ -15,10 +15,10 @@ FROM python:3.14-slim-bookworm
 
 ARG TINI_VERSION=v0.19.0
 
-# Install tini for proper PID 1 signal handling, and libxml2/libxslt1.1 as
-# runtime dependencies for the lxml Python package.
+# Install tini for proper PID 1 signal handling, jq for structured JSON logging,
+# and libxml2/libxslt1.1 as runtime dependencies for the lxml Python package.
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl libxml2 libxslt1.1 && \
+    apt-get install -y --no-install-recommends curl jq libxml2 libxslt1.1 && \
     curl -fsSL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" -o /tini && \
     chmod +x /tini && \
     apt-get purge -y --auto-remove curl && \

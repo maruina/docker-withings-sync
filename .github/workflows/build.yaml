@@ -34,7 +34,7 @@ jobs:
       # Build and load into the local Docker daemon for smoke testing
       # before pushing to the registry.
       - name: Build
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           load: true
           tags: ${{ steps.meta.outputs.tags }}

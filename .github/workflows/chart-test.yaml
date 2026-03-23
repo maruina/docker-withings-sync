@@ -15,7 +15,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: azure/setup-helm@v4
+      - uses: azure/setup-helm@v5
 
       # Python is only used as a build tool for chart-testing (ct/yamale),
       # not for the application. Pin to 3.13 because yamale does not support 3.14.
@@ -46,7 +46,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: azure/setup-helm@v4
+      - uses: azure/setup-helm@v5
 
       # Python is only used as a build tool for chart-testing (ct/yamale),
       # not for the application. Pin to 3.13 because yamale does not support 3.14.

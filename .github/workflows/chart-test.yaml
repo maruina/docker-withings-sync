@@ -19,7 +19,7 @@ jobs:
 
       # Python is only used as a build tool for chart-testing (ct/yamale),
       # not for the application. Pin to 3.13 because yamale does not support 3.14.
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
 
@@ -50,7 +50,7 @@ jobs:
 
       # Python is only used as a build tool for chart-testing (ct/yamale),
       # not for the application. Pin to 3.13 because yamale does not support 3.14.
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
 

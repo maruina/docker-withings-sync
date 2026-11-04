@@ -2,7 +2,7 @@ apiVersion: v2
 name: docker-withings-sync
 description: A Helm chart for deploying withings-sync to Kubernetes
 type: application
-version: 0.2.0
+version: 0.2.1
 appVersion: "0.13.0"
 home: https://github.com/maruina/docker-withings-sync
 sources:

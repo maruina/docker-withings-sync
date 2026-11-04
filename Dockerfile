@@ -1,4 +1,4 @@
-FROM python:3.14-slim-bookworm AS builder
+FROM python:3.15-slim-bookworm AS builder
 
 # withings-sync v6.1.0
 ARG WITHINGS_SYNC_COMMIT=3dd32bccad69c1748a498325d19ced233b47bd18
@@ -8,10 +8,16 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# Install into a venv at a fixed path so the final stage can copy it with
+# COPY --from without hardcoding the Python minor version. Renovate only
+# rewrites the FROM tags, so a versioned site-packages path would break on
+# every Python bump.
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 RUN pip install --no-cache-dir setuptools && \
     pip install --no-cache-dir git+https://github.com/jaroslawhartman/withings-sync.git@"${WITHINGS_SYNC_COMMIT}"
 
-FROM python:3.14-slim-bookworm
+FROM python:3.15-slim-bookworm
 
 ARG TINI_VERSION=v0.19.0
 
@@ -25,10 +31,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-COPY --from=builder /usr/local/lib/python3.14/site-packages /usr/local/lib/python3.14/site-packages
-COPY --from=builder /usr/local/bin/withings-sync /usr/local/bin/withings-sync
+COPY --from=builder /opt/venv /opt/venv
+COPY --from=builder /opt/venv/bin/withings-sync /usr/local/bin/withings-sync
 
-ENV SYNC_INTERVAL=21600 \
+ENV PATH="/opt/venv/bin:${PATH}" \
+    SYNC_INTERVAL=21600 \
     DATA_DIR=/data
 
 RUN groupadd -r -g 65532 withings && useradd -r -u 65532 -g withings -d /data -s /sbin/nologin withings && \

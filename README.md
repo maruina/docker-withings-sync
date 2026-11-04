@@ -76,8 +76,13 @@ The Docker image and Helm chart are released independently.
 ### Docker Image
 
 1. Merge dependency updates (Renovate PRs) or bump `WITHINGS_SYNC_COMMIT` in the `Dockerfile`.
-2. [release-drafter](https://github.com/release-drafter/release-drafter) automatically maintains a draft GitHub release on every push to `main`.
-3. Review and publish the draft release. This creates a `v*` tag, which triggers the `build.yaml` workflow to build and push `ghcr.io/maruina/docker-withings-sync:<version>`.
+2. Create the release manually:
+
+   ```console
+   gh release create v0.15.0 --target main --generate-notes --notes-start-tag v0.14.0
+   ```
+
+   This creates a `v*` tag, which triggers the `build.yaml` workflow to build and push `ghcr.io/maruina/docker-withings-sync:<version>`. Pass `--notes-start-tag` with the previous image release so the notes cover everything since then, and chart releases do not shorten the notes.
 
 ### Helm Chart
 

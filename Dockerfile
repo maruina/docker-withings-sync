@@ -31,6 +31,7 @@ COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder /opt/venv/bin/withings-sync /usr/local/bin/withings-sync
 
 ENV PATH="/opt/venv/bin:${PATH}" \
+    PYTHONUNBUFFERED=1 \
     SYNC_INTERVAL=21600 \
     DATA_DIR=/data
 

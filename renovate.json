@@ -14,7 +14,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "fileMatch": ["^Dockerfile$"],
+      "managerFilePatterns": [
+        "/^Dockerfile$/"
+      ],
       "matchStrings": [
         "# withings-sync (?<currentValue>v\\S+)\\nARG WITHINGS_SYNC_COMMIT=(?<currentDigest>[a-f0-9]+)"
       ],

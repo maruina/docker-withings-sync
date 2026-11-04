@@ -60,11 +60,14 @@ do
     # Under pipefail, the pipeline returns the rightmost non-zero exit code.
     # sed always exits 0. The while-read subshell exits 0 when log (jq) succeeds
     # on every line, so in normal operation withings-sync's exit code propagates.
+    # Inside this branch $? is the negated status of ! (always 0), so the real
+    # withings-sync exit code is read from PIPESTATUS[0] of that last pipeline.
     if ! /usr/local/bin/withings-sync -v 2>&1 \
         | sed '/garmin_password/d' \
         | while IFS= read -r line; do log "info" "$line" --arg source "withings-sync"; done
     then
-        log "error" "withings-sync failed" --argjson exit_code "$?"
+        exit_code="${PIPESTATUS[0]}"
+        log "error" "withings-sync failed" --argjson exit_code "${exit_code}"
     fi
     log "info" "Finished withings-sync" --argjson next_run_seconds "${SYNC_INTERVAL}"
     sleep "${SYNC_INTERVAL}"

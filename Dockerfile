@@ -19,15 +19,11 @@ RUN pip install --no-cache-dir setuptools && \
 
 FROM python:3.15-slim-bookworm
 
-ARG TINI_VERSION=v0.19.0
-
-# Install tini for proper PID 1 signal handling, jq for structured JSON logging,
+# Install tini from the Debian repository for proper PID 1 signal handling
+# (signed packages, no checksum bookkeeping), jq for structured JSON logging,
 # and libxml2/libxslt1.1 as runtime dependencies for the lxml Python package.
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl jq libxml2 libxslt1.1 && \
-    curl -fsSL "https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini" -o /tini && \
-    chmod +x /tini && \
-    apt-get purge -y --auto-remove curl && \
+    apt-get install -y --no-install-recommends tini jq libxml2 libxslt1.1 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -35,6 +31,7 @@ COPY --from=builder /opt/venv /opt/venv
 COPY --from=builder /opt/venv/bin/withings-sync /usr/local/bin/withings-sync
 
 ENV PATH="/opt/venv/bin:${PATH}" \
+    PYTHONUNBUFFERED=1 \
     SYNC_INTERVAL=21600 \
     DATA_DIR=/data
 
@@ -47,5 +44,5 @@ USER withings
 
 # The -g flag forwards signals to the child's process group, ensuring sleep(1)
 # is also terminated on SIGTERM for graceful container shutdown.
-ENTRYPOINT ["/tini", "-g", "--"]
+ENTRYPOINT ["/usr/bin/tini", "-g", "--"]
 CMD ["/entrypoint.sh"]
